@@ -776,7 +776,7 @@ bool DMDView::OnUserMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case DMVMsgHighScoreImage:
-		SetHighScoreImages((DWORD)wParam, reinterpret_cast<std::list<HighScoreImage> *>(lParam));
+		//SetHighScoreImages((DWORD)wParam, reinterpret_cast<std::list<HighScoreImage> *>(lParam));
 		return true;
 	}
 

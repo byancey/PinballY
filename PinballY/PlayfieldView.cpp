@@ -154,6 +154,8 @@ namespace ConfigVars
 	static const TCHAR *CaptureManualStartStopButtons = _T("Capture.ManualStartStopButton");
 
 	static const TCHAR *StatusLineEnable = _T("StatusLine.Enable");
+
+	static const TCHAR *UnderlayHeightOffset = _T("UnderlayHeightOffset");
 };
 
 // include the capture-related variables
@@ -188,6 +190,7 @@ PlayfieldView::PlayfieldView() :
 	settingsDialogOpen = false;
 	mediaDropTargetGame = nullptr;
 	runningGameMode = RunningGameMode::None;
+	underlayHeightOffset = 0.0f;
 	
 	// note the exit key mode
 	TSTRING exitMode = ConfigManager::GetInstance()->Get(ConfigVars::ExitKeyMode, _T("select"));
@@ -3349,6 +3352,9 @@ void PlayfieldView::ShowInitialUI(bool showAboutBox)
 	// initialize the status lines
 	InitStatusLines();
 
+	// load the wheel underlay image
+	LoadUnderlay();
+
 	// load the initial selection
 	UpdateSelection();
 
@@ -3398,7 +3404,7 @@ void PlayfieldView::InitStatusLines()
 	// initialize the status lines from the config
 	upperStatus.Init(this, 75, 0, 6, _T("UpperStatus"), IDS_DEFAULT_STATUS_UPPER);
 	lowerStatus.Init(this, 0, 0, 6, _T("LowerStatus"), IDS_DEFAULT_STATUS_LOWER);
-	attractModeStatus.Init(this, 32, 0, 6, _T("AttractMode.StatusLine"), IDS_DEFAULT_STATUS_ATTRACTMODE);
+	attractModeStatus.Init(this, 0, 0, 6, _T("AttractMode.StatusLine"), IDS_DEFAULT_STATUS_ATTRACTMODE);
 
 	// reset the drawing list, as the sprites might have changed
 	UpdateDrawingList();
@@ -7054,6 +7060,69 @@ void PlayfieldView::UpdateSelection()
 	UpdateDrawingList();
 }
 
+void PlayfieldView::LoadUnderlay()
+{
+	HWND hWnd = this->hWnd;
+	SIZE szLayout = this->szLayout;
+
+	auto loadUnderlay = [hWnd, szLayout, this](VideoSprite *sprite)
+	{
+		// nothing loaded yet
+		bool ok = false;
+
+		Application::AsyncErrorHandler eh;
+
+		// If there's no video, try a static image
+		auto LoadImage = [szLayout, &sprite, &eh](const TCHAR *path, float *height)
+		{
+			// Get the image's native size, and figure the aspect ratio
+			// Return the height of the image for positioning
+
+			ImageFileDesc imageDesc;
+			GetImageFileInfo(path, imageDesc, true);
+
+			float aspect = imageDesc.dispSize.cx != 0 ? float(imageDesc.dispSize.cy) / float(imageDesc.dispSize.cx) : 1.0f;
+			float width = (float)szLayout.cx / (float)szLayout.cy;
+			*height = width * aspect;
+			POINTF normSize = { width, *height };
+
+			// figure the corresponding pixel size
+			SIZE pixSize = { (int)(width * szLayout.cx), (int)(*height * szLayout.cy) };
+
+			return sprite->Load(path, normSize, pixSize, eh);
+		};
+
+		TCHAR defaultUnderlay[MAX_PATH];
+		float height = 0.0f;
+		if (GameList::Get()->FindGlobalImageFile(defaultUnderlay, _T("Images"), _T("Underlay")))
+			ok = LoadImage(defaultUnderlay, &height);
+
+		// Position the underlay so that it's at the bottom of our screen
+		sprite->offset.y = -0.5f + (height * 0.5f);
+
+		// Save the original Y position for later modification
+		this->underlayOriginalYPos = sprite->offset.y;
+
+		// Apply any stored height offset
+		sprite->offset.y += this->underlayHeightOffset;
+
+		sprite->UpdateWorld();
+	};
+
+	auto doneUnderlay = [this](VideoSprite *sprite) { wheelUnderlay.sprite = sprite; };
+
+	playfieldLoader.AsyncLoad(false, loadUnderlay, doneUnderlay);
+}
+
+void PlayfieldView::ApplyUnderlayOffset()
+{
+	if (wheelUnderlay.sprite != nullptr)
+	{
+		wheelUnderlay.sprite->offset.y = underlayOriginalYPos + underlayHeightOffset;
+		wheelUnderlay.sprite->UpdateWorld();
+	}
+}
+
 void PlayfieldView::LoadIncomingPlayfieldMedia(GameListItem *game)
 {
 	// If this game is already loaded in the incoming playfield,
@@ -7200,6 +7269,7 @@ void PlayfieldView::LoadIncomingPlayfieldMedia(GameListItem *game)
 				// load the image into a new sprite
 				return sprite->Load(path, normSize, pixSize, eh);
 			};
+
 			if (!ok && image.length() != 0)
 				ok = LoadImage(image.c_str());
 
@@ -9162,6 +9232,10 @@ void PlayfieldView::UpdateDrawingList()
 	if (incomingPlayfield.sprite != nullptr)
 		sprites.push_back(incomingPlayfield.sprite);
 
+	// add the underlay
+	if (wheelUnderlay.sprite != nullptr)
+		sprites.push_back(wheelUnderlay.sprite);
+
 	// add the status lines
 	if (statusLineBkg != nullptr)
 		sprites.push_back(statusLineBkg);
@@ -10704,6 +10778,9 @@ void PlayfieldView::OnConfigChange()
 	if (parentWindowMenu != 0)
 		UpdateMenuKeys(parentWindowMenu);
 
+	underlayHeightOffset = cfg->GetFloat(ConfigVars::UnderlayHeightOffset, 0.0f);
+	ApplyUnderlayOffset();
+
 	// update the Admin Host with the new EXIT GAME key mappings
 	Application::Get()->SendKeysToAdminHost(adminHostKeys);
 
@@ -11279,7 +11356,10 @@ void PlayfieldView::ShowPauseMenu(bool usingExitKey)
 
 	// exit/shutdown/cancel
 	md.emplace_back(LoadStringT(IDS_MENU_EXIT), ID_EXIT);
+
+	// TODO - DSX - replace with option
 	md.emplace_back(LoadStringT(IDS_MENU_SHUTDOWN), ID_SHUTDOWN);
+
 	md.emplace_back(_T(""), -1);
 	md.emplace_back(LoadStringT(IDS_MENU_GAMERETURN), ID_MENU_RETURN, usingExitKey ? MenuSelected : 0);
 
@@ -11448,6 +11528,8 @@ void PlayfieldView::ShowExitMenu()
 {
 	std::list<MenuItemDesc> md;
 	md.emplace_back(LoadStringT(IDS_MENU_EXIT), ID_EXIT);
+
+	// TODO - DSX - replace with option
 	md.emplace_back(LoadStringT(IDS_MENU_SHUTDOWN), ID_SHUTDOWN);
 
 	// add the Operator Meu command if desired
@@ -12310,7 +12392,10 @@ void PlayfieldView::ShowOperatorMenu()
 	if (!ConfigManager::GetInstance()->GetBool(ConfigVars::ExitMenuEnabled, true))
 	{
 		md.emplace_back(LoadStringT(IDS_MENU_EXIT), ID_EXIT);
+
+		// TODO - DSX - replace with option
 		md.emplace_back(LoadStringT(IDS_MENU_SHUTDOWN), ID_SHUTDOWN);
+
 		md.emplace_back(_T(""), -1);
 	}
 

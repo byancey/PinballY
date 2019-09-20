@@ -459,6 +459,12 @@ protected:
 	// non-null and isn't the special "No Game" entry in the game list.
 	static bool IsGameValid(const GameListItem *game);
 
+	// Load the wheel underlay image
+	void LoadUnderlay();
+
+	// Apply the height offset to the existing wheel underlay sprite
+	void ApplyUnderlayOffset();
+
 	// Load the incoming playfield media.  This starts an asynchronous
 	// thread that loads the new sprite.
 	void LoadIncomingPlayfieldMedia(GameListItem *game);
@@ -1295,7 +1301,7 @@ protected:
 		RefPtr<SpriteType> sprite;
 		RefPtr<AudioVideoPlayer> audio;
 	};
-	GameMedia<VideoSprite> currentPlayfield, incomingPlayfield;
+	GameMedia<VideoSprite> currentPlayfield, incomingPlayfield, wheelUnderlay;
 	
 	// Should we maintain the playfield image aspect ratio or stretch
 	// it to fit the window?
@@ -2454,6 +2460,12 @@ protected:
 		float credits;	// credits awarded at this level; can be fractional (1/2, 1/4, 3/4)
 	};
 	std::list<PricePoint> pricePoints;
+
+	// A configurable height offset for the wheel underlay
+	float underlayHeightOffset;
+
+	// The stored original Y pos of the underlay sprite
+	float underlayOriginalYPos;
 
 	// Real DMD interface
 	std::unique_ptr<RealDMD> realDMD;

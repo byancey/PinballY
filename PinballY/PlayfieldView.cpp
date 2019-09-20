@@ -3401,7 +3401,7 @@ void PlayfieldView::InitStatusLines()
 	// initialize the status lines from the config
 	upperStatus.Init(this, 75, 0, 6, _T("UpperStatus"), IDS_DEFAULT_STATUS_UPPER);
 	lowerStatus.Init(this, 0, 0, 6, _T("LowerStatus"), IDS_DEFAULT_STATUS_LOWER);
-	attractModeStatus.Init(this, 32, 0, 6, _T("AttractMode.StatusLine"), IDS_DEFAULT_STATUS_ATTRACTMODE);
+	attractModeStatus.Init(this, 0, 0, 6, _T("AttractMode.StatusLine"), IDS_DEFAULT_STATUS_ATTRACTMODE);
 
 	// reset the drawing list, as the sprites might have changed
 	UpdateDrawingList();

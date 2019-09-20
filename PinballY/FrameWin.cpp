@@ -880,8 +880,8 @@ void FrameWin::OnResize(int width, int height)
 
 bool FrameWin::OnGetMinMaxInfo(MINMAXINFO *mmi)
 {
-	mmi->ptMinTrackSize.x = 200;
-	mmi->ptMinTrackSize.y = 200;
+	mmi->ptMinTrackSize.x = 100;
+	mmi->ptMinTrackSize.y = 100;
 	return true;
 }
 

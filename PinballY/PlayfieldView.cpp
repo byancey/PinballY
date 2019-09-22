@@ -11384,7 +11384,7 @@ void PlayfieldView::ShowFilterSubMenu(int cmd, const TCHAR *group, const WCHAR *
 	// filter group
 	for (auto f : gl->GetFilters())
 	{
-		if (f->menuGroup == group)
+		if (f->menuGroup == group && f->GetMenuTitle()[0] != 0 )
 			AddFilter(f);
 	}
 

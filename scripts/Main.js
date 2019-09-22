@@ -1,2 +1,3 @@
 
-import "HideFuturePinball.js"; 
+import "HideFuturePinball.js";
+import "CustomizeMainMenu.js";

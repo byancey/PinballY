@@ -33,7 +33,7 @@ public:
 	TopperView();
 
 protected:
-	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_INSTCARD; }
+	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_DMD; }
 
 	// Get the background media info
 	virtual const MediaType *GetBackgroundImageType() const override;

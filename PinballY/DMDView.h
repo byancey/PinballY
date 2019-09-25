@@ -59,7 +59,7 @@ protected:
 	static const int NextHighScoreTimerID = 201;   // advance to next high score image
 
 	// get the next window for game syncing
-	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_TOPPER; }
+	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_INSTCARD; }
 
 	// Get the background media info
 	virtual const MediaType *GetBackgroundImageType() const override;

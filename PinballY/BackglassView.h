@@ -67,7 +67,7 @@ public:
 	BackglassView();
 
 protected:
-	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_DMD; }
+	virtual UINT GetNextWindowSyncCommand() const override { return ID_SYNC_TOPPER; }
 
 	// Get the background media info
 	virtual const MediaType *GetBackgroundImageType() const override;

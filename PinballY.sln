@@ -25,12 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VersionInfoUpdater", "Versi
 		{82B807D0-60B4-4324-B472-A14C860E01F6} = {82B807D0-60B4-4324-B472-A14C860E01F6}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenerateDXAudioHeaderIncludes", "GenerateDXAudioHeaderIncludes\GenerateDXAudioHeaderIncludes.vcxproj", "{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTKAudio_Desktop_2017_DXSDK", "DirectXTK\Audio\DirectXTKAudio_Desktop_2017_DXSDK.vcxproj", "{A463746F-3EB5-49A7-9251-DC56B608CDBD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6} = {97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlibstat", "zlib\contrib\vstudio\vc14\zlibstat.vcxproj", "{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}"
 EndProject
@@ -105,14 +100,6 @@ Global
 		{2A114D6B-D0C0-483F-B65B-28E256CA3776}.Release|x64.Build.0 = Release|x64
 		{2A114D6B-D0C0-483F-B65B-28E256CA3776}.Release|x86.ActiveCfg = Release|Win32
 		{2A114D6B-D0C0-483F-B65B-28E256CA3776}.Release|x86.Build.0 = Release|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Debug|x64.ActiveCfg = Debug|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Debug|x64.Build.0 = Debug|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Debug|x86.ActiveCfg = Debug|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Debug|x86.Build.0 = Debug|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Release|x64.ActiveCfg = Release|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Release|x64.Build.0 = Release|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Release|x86.ActiveCfg = Release|Win32
-		{97546F9F-B3AA-4ABA-A5AA-96ADAEF8F3F6}.Release|x86.Build.0 = Release|Win32
 		{A463746F-3EB5-49A7-9251-DC56B608CDBD}.Debug|x64.ActiveCfg = Debug|x64
 		{A463746F-3EB5-49A7-9251-DC56B608CDBD}.Debug|x64.Build.0 = Debug|x64
 		{A463746F-3EB5-49A7-9251-DC56B608CDBD}.Debug|x86.ActiveCfg = Debug|Win32

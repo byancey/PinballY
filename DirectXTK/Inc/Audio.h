@@ -33,36 +33,25 @@
 #endif
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
-#if defined(_MSC_VER) && (_MSC_VER < 1700)
-#error DirectX Tool Kit for Audio does not support VS 2010 without the DirectX SDK 
-#endif
 #include <xaudio2.h>
 #include <xaudio2fx.h>
 #include <x3daudio.h>
 #include <xapofx.h>
-#pragma error("Using wrong SDK - DX SDK version must be used for Windows 7 compatibility") 
 #pragma comment(lib,"xaudio2.lib")
 #else
-// Using XAudio 2.7 requires the DirectX SDK.
-// MJR: These files must be included with the explicit path to the SDK,
-// due to conflicts between these legacy headers and the modern headers
-// included in the base Windows SDK (as explained in the DirectXTK audio
-// documentation).  The original DXTK version of Audio.h hard-coded the
-// directory paths here.  That's too brittle.  I've separated them out
-// into another file that we auto-generate based on the DXSDK_DIR global
-// environment variable setting.
-#include "DirectX_LegacySdkHeaders.h"
-//#include <D:\dxsdk\Include\comdecl.h>
-//#include <D:\dxsdk\Include\xaudio2.h>
-//#include <D:\dxsdk\Include\xaudio2fx.h>
-//#include <D:\dxsdk\Include\xapofx.h>
-//#pragma warning(push)
-//#pragma warning( disable : 4005 )
-//#include <D:\dxsdk\Include\x3daudio.h>
-//#pragma warning(pop)
+// Using XAudio 2.7 requires the DirectX SDK
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\comdecl.h>
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xaudio2.h>
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xaudio2fx.h>
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xapofx.h>
+#pragma warning(push)
+#pragma warning( disable : 4005 )
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\x3daudio.h>
+#pragma warning(pop)
 #pragma comment(lib,"x3daudio.lib")
 #pragma comment(lib,"xapofx.lib")
 #endif
+
 
 #include <DirectXMath.h>
 

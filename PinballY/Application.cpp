@@ -2251,6 +2251,10 @@ TSTRING Application::GameMonitorThread::SubstituteVars(const TSTRING &str)
 			// the original table file, exactly as it appears in the database
 			return game.filename;
 		}
+		else if (var == _T("MEDIANAME"))
+		{
+			return game.mediaName.c_str();
+		}
 		else if (var == _T("PINBALLY"))
 		{
 			// the PinballY progrma folder
